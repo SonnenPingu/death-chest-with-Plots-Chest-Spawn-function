@@ -128,6 +128,11 @@ change-death-message:
   message: |-
     &7${player_name} died at ${x} ${y} ${z} in ${world}
 
+# Bypass System für PlotsSquard /Anpassung wegen KidsCraftinWorld, einen Minecraft Kinder Netzwerk/
+plot-squared:
+  bypass-protection: true
+
+
 # This section configures the activation of this plugin for specific worlds.
 world-filter:
   # Possible values: blacklist, whitelist

@@ -22,6 +22,7 @@ public record DeathChestConfig(
         @SerializedName("world-filter") @NotNull WorldFilterConfig worldFilterConfig,
         @SerializedName("world-chest-protection-filter") @NotNull WorldFilterConfig worldChestProtectionFilter,
         @SerializedName("world-alias") @NotNull WorldAliasConfig worldAlias,
+        @SerializedName("plot-squared-bypass") boolean plotSquaredBypass,
         @SerializedName("preferred-animation-service") @Nullable String preferredBlockBreakAnimationService) {
 
     public static final int CONFIG_VERSION = 3;
@@ -52,6 +53,7 @@ public record DeathChestConfig(
         GlobalNotificationOptions globalNotificationOptions = GlobalNotificationOptions.load(config.getConfigurationSection("global-notification"));
 
         ChangeDeathMessageOptions changeDeathMessageOptions = ChangeDeathMessageOptions.load(config.getConfigurationSection("change-death-message"));
+        boolean plotSquaredBypass = config.getBoolean("plot-squared.bypass-protection", false);
 
         WorldFilterConfig worldFilterConfig = WorldFilterConfig.load(config.getConfigurationSection("world-filter"));
         WorldFilterConfig worldChestProtectionFilterConfig = WorldFilterConfig.load(config.getConfigurationSection("world-chest-protection-filter"));
@@ -59,7 +61,11 @@ public record DeathChestConfig(
 
         String preferredAnimationService = config.getString("preferred-animation-service");
 
-        return new DeathChestConfig(configVersion, debug, updateCheck, autoUpdate, durationFormat, chestOptions, inventoryOptions, hologramOptions, particleOptions, breakAnimationOptions, playerNotificationOptions, globalNotificationOptions, changeDeathMessageOptions, worldFilterConfig, worldChestProtectionFilterConfig, worldAliasConfig, preferredAnimationService);
+        return new DeathChestConfig(
+        configVersion, debug, updateCheck, autoUpdate, durationFormat,
+        chestOptions, inventoryOptions, hologramOptions, particleOptions,
+        breakAnimationOptions, playerNotificationOptions, globalNotificationOptions,
+        changeDeathMessageOptions, worldFilterConfig, worldChestProtectionFilterConfig,
+        worldAliasConfig, preferredAnimationService, plotSquaredBypass);
     }
-
 }
