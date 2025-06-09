@@ -52,7 +52,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.plotsquared.core.PlotSquared;
 import com.plotsquared.core.plot.Plot;
-import com.plotsquared.core.location.Location;
 import com.plotsquared.bukkit.util.BukkitUtil;
 
 import java.io.File;
@@ -63,7 +62,7 @@ import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.stream.Stream;
 
-import com.github.devcyntrix.deathchest.view.chest.BlockView;
+import javax.swing.text.html.BlockView;
 
 import static com.github.devcyntrix.deathchest.api.report.ReportManager.DATE_FORMAT_CONFIG;
 
@@ -447,7 +446,7 @@ public class DeathChestPlugin extends JavaPlugin implements DeathChestService {
      * @return true if the chest can be placed at the position
      */
 @Override
-public boolean canPlaceChestAt(@NotNull Location location) {
+public boolean canPlaceChestAt(@NotNull Location location, com.plotsquared.core.location.Location plotLocation) {
     World world = location.getWorld();
     if (world == null)
         return false;
@@ -466,31 +465,32 @@ public boolean canPlaceChestAt(@NotNull Location location) {
     if (!deathChestConfig.plotSquaredBypass()) {
         try {
             PlotAPI api = new PlotAPI();
-            Plot plot = api.getPlot(location);
+            Plot plot = api.getPlot(plotLocation);
             if (plot != null && !plot.hasOwner()) {
-                return false; // No permission to place in unowned plot
+                return false; // Kein Recht, in unbesetztem Plot zu bauen
             }
         } catch (Exception ignored) {
-            getLogger().warning("PlotSquared API not available or failed to check.");
+            getLogger().warning("PlotSquared API nicht verfügbar oder Fehler beim Prüfen.");
         }
     }
 
     return true;
 }
 
+
 @Override
 public @NotNull DeathChestModel createDeathChest(@NotNull Location location, @NotNull ItemStack... items) {
-    return createDeathChest(location, null, items);
+    return this.createDeathChest(location, null, items);
 }
 
 @Override
 public @NotNull DeathChestModel createDeathChest(@NotNull Location location, @Nullable Player player, @NotNull ItemStack... items) {
-    return createDeathChest(location, -1, player, items);
+    return this.createDeathChest(location, -1, player, items);
 }
 
 @Override
 public @NotNull DeathChestModel createDeathChest(@NotNull Location location, long expireAt, @Nullable Player player, @NotNull ItemStack... items) {
-    return createDeathChest(location, System.currentTimeMillis(), expireAt, player, items);
+    return this.createDeathChest(location, System.currentTimeMillis(), expireAt, player, items);
 }
 
 @Override
