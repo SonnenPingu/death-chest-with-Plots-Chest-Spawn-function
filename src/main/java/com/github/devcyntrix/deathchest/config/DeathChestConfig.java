@@ -53,14 +53,14 @@ public record DeathChestConfig(
         GlobalNotificationOptions globalNotificationOptions = GlobalNotificationOptions.load(config.getConfigurationSection("global-notification"));
 
         ChangeDeathMessageOptions changeDeathMessageOptions = ChangeDeathMessageOptions.load(config.getConfigurationSection("change-death-message"));
-        boolean plotSquaredBypass = config.getBoolean("plot-squared.bypass-protection", false);
+        
 
         WorldFilterConfig worldFilterConfig = WorldFilterConfig.load(config.getConfigurationSection("world-filter"));
         WorldFilterConfig worldChestProtectionFilterConfig = WorldFilterConfig.load(config.getConfigurationSection("world-chest-protection-filter"));
         WorldAliasConfig worldAliasConfig = WorldAliasConfig.load(config.getConfigurationSection("world-alias"));
 
         String preferredAnimationService = config.getString("preferred-animation-service");
-
+        boolean plotSquaredBypass = config.getBoolean("plot-squared.bypass-protection", false);
         return new DeathChestConfig(
         configVersion, debug, updateCheck, autoUpdate, durationFormat,
         chestOptions, inventoryOptions, hologramOptions, particleOptions,

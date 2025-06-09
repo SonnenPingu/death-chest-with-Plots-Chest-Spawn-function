@@ -50,6 +50,10 @@ import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.plotsquared.core.PlotSquared;
+import com.plotsquared.core.plot.Plot;
+import com.plotsquared.core.location.Location;
+import com.plotsquared.bukkit.util.BukkitUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +63,7 @@ import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.stream.Stream;
 
-import javax.swing.text.html.BlockView;
+import com.github.devcyntrix.deathchest.view.chest.BlockView;
 
 import static com.github.devcyntrix.deathchest.api.report.ReportManager.DATE_FORMAT_CONFIG;
 
