@@ -38,9 +38,10 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.1.0") // Updated from 3.0.2
 
     // Protection Support (updated versions)
-    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.1.0") // Updated from 7.0.7
-    compileOnly("com.plotsquared:PlotSquared-Core:6.9.5") { isTransitive = false } // Updated
-    compileOnly("com.plotsquared:PlotSquared-Bukkit:6.9.5") { isTransitive = false } // Updated
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.13")
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.52"))
+    compileOnly("com.intellectualsites.plotsquared:plotsquared-core")
+    compileOnly("com.intellectualsites.plotsquared:plotsquared-bukkit") { isTransitive = false }
     compileOnly("com.github.TechFortress:GriefPrevention:16.18") { isTransitive = false }
     compileOnly("br.net.fabiozumbi12.RedProtect:RedProtect-Core:7.7.3") { isTransitive = false }
     compileOnly("br.net.fabiozumbi12.RedProtect:RedProtect-Spigot:7.7.3") { isTransitive = false }
