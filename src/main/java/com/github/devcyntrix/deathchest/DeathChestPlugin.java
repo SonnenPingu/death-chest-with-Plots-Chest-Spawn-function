@@ -50,9 +50,6 @@ import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.plotsquared.core.PlotSquared;
-import com.plotsquared.core.plot.Plot;
-import com.plotsquared.bukkit.util.BukkitUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,8 +58,6 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.stream.Stream;
-
-import javax.swing.text.html.BlockView;
 
 import static com.github.devcyntrix.deathchest.api.report.ReportManager.DATE_FORMAT_CONFIG;
 
@@ -445,58 +440,38 @@ public class DeathChestPlugin extends JavaPlugin implements DeathChestService {
      * @param location the location where the chest should be placed.
      * @return true if the chest can be placed at the position
      */
-@Override
-public boolean canPlaceChestAt(@NotNull Location location, com.plotsquared.core.location.Location plotLocation) {
-    World world = location.getWorld();
-    if (world == null)
-        return false;
+    @Override
+    public boolean canPlaceChestAt(@NotNull Location location) {
+        World world = location.getWorld();
+        if (world == null)
+            return false;
+        if (location.getY() < world.getMinHeight())
+            return false;
+        if (location.getY() >= world.getMaxHeight())
+            return false;
 
-    if (location.getY() < world.getMinHeight() || location.getY() >= world.getMaxHeight())
-        return false;
-
-    if (deathChestController.getChest(location) != null)
-        return false;
-
-    Material blockType = location.getBlock().getType();
-    if (blockType.isSolid() || blockType == Material.NETHER_PORTAL)
-        return false;
-
-    // PlotSquared bypass check
-    if (!deathChestConfig.plotSquaredBypass()) {
-        try {
-            PlotAPI api = new PlotAPI();
-            Plot plot = api.getPlot(plotLocation);
-            if (plot != null && !plot.hasOwner()) {
-                return false; // Kein Recht, in unbesetztem Plot zu bauen
-            }
-        } catch (Exception ignored) {
-            getLogger().warning("PlotSquared API nicht verfügbar oder Fehler beim Prüfen.");
-        }
+        return deathChestController.getChest(location) == null && !location.getBlock().getType().isSolid() && location.getBlock().getType() != Material.NETHER_PORTAL;
     }
 
-    return true;
-}
+    @Override
+    public @NotNull DeathChestModel createDeathChest(@NotNull Location location, ItemStack @NotNull ... items) {
+        return createDeathChest(location, null, items);
+    }
 
+    @Override
+    public @NotNull DeathChestModel createDeathChest(@NotNull Location location, @Nullable Player player, ItemStack @NotNull ... items) {
+        return createDeathChest(location, -1, player, items);
+    }
 
-@Override
-public @NotNull DeathChestModel createDeathChest(@NotNull Location location, @NotNull ItemStack... items) {
-    return this.createDeathChest(location, null, items);
-}
+    @Override
+    public @NotNull DeathChestModel createDeathChest(@NotNull Location location, long expireAt, @Nullable Player player, ItemStack @NotNull ... items) {
+        return createDeathChest(location, System.currentTimeMillis(), expireAt, player, items);
+    }
 
-@Override
-public @NotNull DeathChestModel createDeathChest(@NotNull Location location, @Nullable Player player, @NotNull ItemStack... items) {
-    return this.createDeathChest(location, -1, player, items);
-}
-
-@Override
-public @NotNull DeathChestModel createDeathChest(@NotNull Location location, long expireAt, @Nullable Player player, @NotNull ItemStack... items) {
-    return this.createDeathChest(location, System.currentTimeMillis(), expireAt, player, items);
-}
-
-@Override
-public @NotNull DeathChestModel createDeathChest(@NotNull Location location, long createdAt, long expireAt, @Nullable Player player, boolean isProtected, @NotNull ItemStack... items) {
-    return this.deathChestController.createChest(location, createdAt, expireAt, player, isProtected, items);
-}
+    @Override
+    public @NotNull DeathChestModel createDeathChest(@NotNull Location location, long createdAt, long expireAt, @Nullable Player player, boolean isProtected, ItemStack @NotNull ... items) {
+        return this.deathChestController.createChest(location, createdAt, expireAt, player, isProtected, items);
+    }
 
     @Override
     public @NotNull Stream<@NotNull DeathChestModel> getChests() {
