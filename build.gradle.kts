@@ -39,8 +39,8 @@ dependencies {
 
     // Protection Support (updated versions)
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.11")
-    compileOnly("com.intellectualsites.plotsquared:plotsquared-bukkit:6.10.1")
-    compileOnly("com.intellectualsites.plotsquared:plotsquared-core:6.10.1") { isTransitive = false }
+    compileOnly("com.plotsquared:PlotSquared-Core:6.10.1")
+    compileOnly("com.plotsquared:PlotSquared-Bukkit:6.10.1") { isTransitive = false }
     compileOnly("com.github.TechFortress:GriefPrevention:16.18") { isTransitive = false }
     compileOnly("br.net.fabiozumbi12.RedProtect:RedProtect-Core:7.7.3") { isTransitive = false }
     compileOnly("br.net.fabiozumbi12.RedProtect:RedProtect-Spigot:7.7.3") { isTransitive = false }
