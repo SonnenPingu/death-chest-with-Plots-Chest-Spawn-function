@@ -28,10 +28,6 @@ import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * This class is only for handling if a player dies. Here is the spawning of a death chest written and some checks if a
- * chest should spawn. Additionally, here is the death message, custom info and broadcast message implemented.
- */
 public class SpawnChestListener implements Listener {
 
     private final DeathChestPlugin plugin;
@@ -40,9 +36,6 @@ public class SpawnChestListener implements Listener {
         this.plugin = plugin;
     }
 
-    /**
-     * Necessary for detecting multi dying at once.
-     */
     private final Set<Player> set = Collections.newSetFromMap(new WeakHashMap<>());
 
     @EventHandler
@@ -55,16 +48,8 @@ public class SpawnChestListener implements Listener {
         set.remove(event.getPlayer());
     }
 
-    /**
-     * Creates the death chest if the player dies.
-     * It only spawns a chest if the player has the permission to build in the region.
-     * It puts the drops into the chest and clears the drops.
-     *
-     * @param event the event from the bukkit api
-     */
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onDeath(PlayerDeathEvent event) {
-
         plugin.debug(0, "Spawning death chest...");
 
         Player player = event.getEntity();
@@ -85,7 +70,7 @@ public class SpawnChestListener implements Listener {
         plugin.debug(1, "Removing air and blacklisted items...");
         List<ItemStack> drops = event.getDrops();
         boolean removed = drops
-                .removeIf(itemStack -> itemStack == null || itemStack.getType().isAir() || itemStack.getAmount() <= 0 || !plugin.getBlacklist().isValidItem(itemStack)); // Prevent spawning an empty chest
+                .removeIf(itemStack -> itemStack == null || itemStack.getType().isAir() || itemStack.getAmount() <= 0 || !plugin.getBlacklist().isValidItem(itemStack));
         if (removed) {
             plugin.debug(2, "Inventory has been updated.");
         }
@@ -124,7 +109,6 @@ public class SpawnChestListener implements Listener {
         if (lastSafePos == null) {
             lastSafePos = player.getLocation().getBlock().getLocation().clone();
         } else if (player.getLocation().distanceSquared(lastSafePos) >= 20 * 20) {
-            // Spawn the chest near to the player death location if the safe position distance is higher than 20 Blocks
             lastSafePos = player.getLocation().getBlock().getLocation().clone();
             int it = 0;
             while (lastSafePos.getBlock().isEmpty() && lastSafePos.getBlockY() >= world.getMinHeight() && it <= 20) {
@@ -132,16 +116,19 @@ public class SpawnChestListener implements Listener {
                 it++;
             }
             if (!lastSafePos.getBlock().isEmpty())
-                lastSafePos.add(0, 1, 0); // Spawn the chest on top of the highest block
+                lastSafePos.add(0, 1, 0);
         }
 
-        // Clip the chest spawn to the world heights
-        lastSafePos.setY(Math.min(Math.max(lastSafePos.getBlockY(), world.getMinHeight()), world.getMaxHeight() - 1)); // -1 because the max height is exclusive
+        lastSafePos.setY(Math.min(Math.max(lastSafePos.getBlockY(), world.getMinHeight()), world.getMaxHeight() - 1));
 
         plugin.debug(1, "Checking protection service...");
-        boolean build = plugin.getProtectionService().canBuild(player, lastSafePos, Material.CHEST);
-        if (!build)
+        boolean hasOverride = player.hasPermission("deathchest.override.plots");
+        if (!hasOverride && !plugin.getProtectionService().canBuild(player, lastSafePos, Material.CHEST)) {
+            plugin.debug(1, "Protection service denied build permission and no override permission present");
             return;
+        } else if (hasOverride) {
+            plugin.debug(1, "Override permission present, skipping protection check");
+        }
 
         ChangeDeathMessageOptions changeDeathMessageOptions = config.changeDeathMessageOptions();
         if (changeDeathMessageOptions.enabled()) {
@@ -156,10 +143,9 @@ public class SpawnChestListener implements Listener {
                     return s;
                 }).collect(Collectors.joining("\n")));
             } else {
-                event.setDeathMessage(null); // Disable death message
+                event.setDeathMessage(null);
             }
         }
-
 
         try {
             ThiefProtectionOptions thiefProtectionOptions = config.chestOptions().thiefProtectionOptions();
@@ -183,13 +169,10 @@ public class SpawnChestListener implements Listener {
             DeathChestSpawnEvent deathChestSpawnEvent = new DeathChestSpawnEvent(player, deathChest);
             Bukkit.getPluginManager().callEvent(deathChestSpawnEvent);
 
-            // Clears the drops
             plugin.debug(1, "Clearing drops...");
             event.getDrops().clear();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 }

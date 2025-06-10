@@ -28,7 +28,7 @@ public class ChestInteractionListener implements Listener {
      *
      * @param event the event from the Bukkit API
      */
-    @EventHandler
+@EventHandler
     public void onOpenChest(PlayerInteractEvent event) {
         if (!event.hasBlock()) return;
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
@@ -37,7 +37,7 @@ public class ChestInteractionListener implements Listener {
         if (block == null) return;
 
         Player player = event.getPlayer();
-        if (event.isBlockInHand() && player.isSneaking()) // That maintains the natural minecraft feeling
+        if (event.isBlockInHand() && player.isSneaking())
             return;
 
         DeathChestController controller = plugin.getDeathChestController();
@@ -47,15 +47,17 @@ public class ChestInteractionListener implements Listener {
 
         event.setCancelled(true);
 
-        // Chest Protection
-        if (!controller.isAccessibleBy(model, player)) {
+        boolean isOwner = model.getOwner() != null && model.getOwner().equals(player.getUniqueId());
+        boolean hasOverride = isOwner && player.hasPermission("deathchest.override.plots");
+
+        if (!hasOverride && !controller.isAccessibleBy(model, player)) {
             ThiefProtectionOptions protectionOptions = plugin.getDeathChestConfig().chestOptions().thiefProtectionOptions();
             protectionOptions.playSound(player, block.getLocation());
             protectionOptions.notify(player);
             return;
         }
 
-        if (model.getInventory().isEmpty()) { //
+        if (model.getInventory().isEmpty()) {
             return;
         }
 
@@ -68,6 +70,4 @@ public class ChestInteractionListener implements Listener {
 
         player.openInventory(model.getInventory());
     }
-
-
 }
