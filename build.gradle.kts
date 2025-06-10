@@ -15,60 +15,67 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://maven.enginehub.org/repo/")
+
     maven("https://repo.codemc.io/repository/maven-public/")
     maven("https://repo.dmulloy2.net/repository/public/")
     maven("https://raw.githubusercontent.com/FabioZumbi12/RedProtect/mvn-repo/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+
     maven("https://repository.minecodes.pl/releases")
+
     maven("https://jitpack.io")
 }
 
 dependencies {
-    // Core Dependencies (updated)
     compileOnly("com.google.inject:guice:7.0.0")
-    compileOnly("org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT") // Updated from 1.17.1
-    compileOnly("net.kyori:adventure-platform-bukkit:4.3.3") // Updated from 4.3.0
-    compileOnly("net.kyori:adventure-text-minimessage:4.17.0") // Updated from 4.14.0
-    compileOnly("net.kyori:adventure-text-serializer-legacy:4.17.0") // Updated from 4.14.0
+    compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly("net.kyori:adventure-platform-bukkit:4.3.0")
+    compileOnly("net.kyori:adventure-text-minimessage:4.14.0")
+    compileOnly("net.kyori:adventure-text-serializer-legacy:4.14.0")
 
-    // Command Framework (consider updating to v2)
-    compileOnly("cloud.commandframework:cloud-core:1.7.1") // Keep v1 or switch to v2.x
+    // Command library
+    compileOnly("cloud.commandframework:cloud-core:1.7.1")
     compileOnly("cloud.commandframework:cloud-bukkit:1.7.1")
 
-    implementation("org.bstats:bstats-bukkit:3.1.0") // Updated from 3.0.2
+    implementation("org.bstats:bstats-bukkit:3.0.2")
 
-    // Protection Support (updated versions)
-    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.11")
-    compileOnly("com.plotsquared:PlotSquared-Core:6.10.1")
-    compileOnly("com.plotsquared:PlotSquared-Bukkit:6.10.1") { isTransitive = false }
+    // Protection Support
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.7")
+    compileOnly("com.plotsquared:PlotSquared-Core:6.8.1") { isTransitive = false }
+    compileOnly("com.plotsquared:PlotSquared-Bukkit:6.8.1") { isTransitive = false }
     compileOnly("com.github.TechFortress:GriefPrevention:16.18") { isTransitive = false }
     compileOnly("br.net.fabiozumbi12.RedProtect:RedProtect-Core:7.7.3") { isTransitive = false }
     compileOnly("br.net.fabiozumbi12.RedProtect:RedProtect-Spigot:7.7.3") { isTransitive = false }
     compileOnly("pl.minecodes.plots:plugin-api:4.0.0")
 
-    // Other Dependencies
+    // Animation Support
     compileOnly("com.comphenix.protocol:ProtocolLib:5.3.0") { isTransitive = false }
-    compileOnly("me.clip:placeholderapi:2.11.6") { isTransitive = false }
-    compileOnly("com.griefcraft:lwc:2.3.2-dev")
-    compileOnly("org.apache.commons:commons-text:1.11.0") // Updated from 1.10.0
-    compileOnly("org.jetbrains:annotations:24.1.0") // Updated from 23.0.0
 
-    // Lombok
+    // Placeholder API
+    compileOnly("me.clip:placeholderapi:2.11.6") { isTransitive = false }
+
+    // Lock
+    compileOnly("com.griefcraft:lwc:2.3.2-dev")
+
+    compileOnly("org.apache.commons:commons-text:1.10.0")
+    compileOnly("org.jetbrains:annotations:23.0.0")
+
+
     compileOnly("org.projectlombok:lombok:1.18.32")
     annotationProcessor("org.projectlombok:lombok:1.18.32")
 
-    // Test Dependencies (updated)
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2") // Updated from 5.7.1
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
     testImplementation("com.github.seeseemelk:MockBukkit-v1.20:3.71.0")
-    testImplementation("net.kyori:adventure-platform-bukkit:4.3.3")
-    testImplementation("net.kyori:adventure-text-minimessage:4.17.0")
-    testImplementation("net.kyori:adventure-text-serializer-legacy:4.17.0")
+    testImplementation("net.kyori:adventure-platform-bukkit:4.3.0")
+    testImplementation("net.kyori:adventure-text-minimessage:4.14.0")
+    testImplementation("net.kyori:adventure-text-serializer-legacy:4.14.0")
     testImplementation("me.clip:placeholderapi:2.11.6") { isTransitive = false }
-    testImplementation("org.apache.commons:commons-text:1.11.0")
+    testImplementation("org.apache.commons:commons-text:1.10.0")
     testImplementation("cloud.commandframework:cloud-core:1.7.1")
     testImplementation("cloud.commandframework:cloud-bukkit:1.7.1")
-    testImplementation("org.bstats:bstats-bukkit:3.1.0")
+    testImplementation("org.bstats:bstats-bukkit:3.0.2")
     testImplementation("ch.qos.logback:logback-classic:1.4.14")
 
     testCompileOnly("org.projectlombok:lombok:1.18.32")
@@ -77,8 +84,8 @@ dependencies {
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
-    targetCompatibility = JavaVersion.VERSION_21
-    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_17
 }
 
 tasks {
@@ -104,6 +111,7 @@ tasks {
     }
     test {
         useJUnitPlatform()
+
         testLogging {
             events("passed", "skipped", "failed")
             showCauses = true
@@ -112,6 +120,7 @@ tasks {
     }
     runServer {
         minecraftVersion("1.21.4")
+
     }
     shadowJar {
         relocate("org.bstats", "com.github.devcyntrix.deathchest.metrics")
@@ -119,11 +128,13 @@ tasks {
     }
 }
 
+
 hangarPublish {
     publications.register("DeathChest") {
         version.set(project.version as String)
         id = "DeathChest"
         changelog.set("https://github.com/DevCyntrix/death-chest/blob/main/CHANGELOG")
+
         apiKey.set(System.getenv("API_KEY"))
 
         if (!project.version.toString().contains('-')) {
@@ -135,7 +146,9 @@ hangarPublish {
         platforms {
             register(Platforms.PAPER) {
                 jar = tasks.shadowJar.flatMap { it.archiveFile }
-                platformVersions.set(listOf("1.17-1.21.5")) // Updated from 
+                println(jar.get().asFile)
+                println(version)
+                platformVersions.set(listOf("1.17-1.21.5"))
                 dependencies.url("ProtocolLib", "https://www.spigotmc.org/resources/protocollib.1997/") {
                     required.set(false)
                 }
@@ -148,7 +161,16 @@ hangarPublish {
                 dependencies.url("RedProtect", "https://www.spigotmc.org/resources/redprotect-anti-grief-server-protection-region-management-1-7-1-19.15841/") {
                     required.set(false)
                 }
+                dependencies.url("GriefDefender", "https://www.spigotmc.org/resources/1-12-2-1-19-4-griefdefender-claim-plugin-grief-prevention-protection.68900/") {
+                    required.set(false)
+                }
                 dependencies.url("WorldGuard", "https://dev.bukkit.org/projects/worldguard") {
+                    required.set(false)
+                }
+                dependencies.url("minePlots", "https://builtbybit.com/resources/mineplots.21646/") {
+                    required.set(false)
+                }
+                dependencies.url("LocketteX", "https://www.spigotmc.org/resources/lockettex-optimized-simple-chest-protection-plugin.73184/") {
                     required.set(false)
                 }
                 dependencies.url("LWC", "https://www.spigotmc.org/resources/lwc-extended.69551/") {
@@ -156,5 +178,6 @@ hangarPublish {
                 }
             }
         }
+
     }
 }
